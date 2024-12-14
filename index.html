@@ -272,16 +272,25 @@
 		        });
 		}
 
-        function downloadText(encodedTextContent) {
-            const textContent = decodeURIComponent(encodedTextContent);
-            const blob = new Blob([textContent], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'texto-generado.txt';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+	    function downloadText(encodedTextContent) {
+	       const textContent = decodeURIComponent(encodedTextContent);
+	       const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
+	       const blob = new Blob([textContent], { type: 'text/plain' });
+	       const link = document.createElement('a');
+	       link.href = URL.createObjectURL(blob);
+	       link.download = `${prompt || 'texto-generado'}.txt`;
+	       document.body.appendChild(link);
+	       link.click();
+	       document.body.removeChild(link);
+	   });
+	               const link = document.createElement('a');
+	               link.href = URL.createObjectURL(blob);
+	               link.download = 'texto-generado.txt';
+	               document.body.appendChild(link);
+	               link.click();
+	               document.body.removeChild(link);
+	           }
+        
 
         function shareText(encodedTextContent) {
             const textContent = decodeURIComponent(encodedTextContent);
