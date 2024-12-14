@@ -246,25 +246,46 @@
             document.getElementById('userPrompt').focus();
         }
 
-        function downloadImage(imageUrl) {
-            const link = document.createElement('a');
-            link.href = imageUrl;
-            link.download = 'imagen-generada.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+		function downloadImage(imageUrl) {
+		    fetch(imageUrl)
+		        .then(response => response.blob())
+		        .then(blob => {
+		            const link = document.createElement('a');
+		            link.href = URL.createObjectURL(blob);
+		            link.download = 'imagen-generada.png';
+		            document.body.appendChild(link);
+		            link.click();
+		            document.body.removeChild(link);
+		        })
+		        .catch(error => {
+		            console.error('Error al descargar la imagen:', error);
+		            alert('No se pudo descargar la imagen.');
+		        });
+		}
 
-        function shareImage(imageUrl) {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Imagen Generada',
-                    url: imageUrl
-                }).catch(error => console.log('Error al compartir:', error));
-            } else {
-                alert('La función de compartir no está soportada en este navegador.');
-            }
-        }
+		function shareImage(imageUrl) {
+		    fetch(imageUrl)
+		        .then(response => response.blob())
+		        .then(blob => {
+		            const file = new File([blob], 'imagen-generada.png', { type: 'image/png' });
+            
+		            if (navigator.share) {
+		                navigator.share({
+		                    title: 'Imagen Generada',
+		                    files: [file]
+		                }).catch(error => {
+		                    console.log('Error al compartir:', error);
+		                    alert('No se pudo compartir la imagen.');
+		                });
+		            } else {
+		                alert('La función de compartir no está soportada en este navegador.');
+		            }
+		        })
+		        .catch(error => {
+		            console.error('Error al obtener la imagen:', error);
+		            alert('No se pudo obtener la imagen.');
+		        });
+		}
 
         function downloadText(encodedTextContent) {
             const textContent = decodeURIComponent(encodedTextContent);
