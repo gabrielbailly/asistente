@@ -247,12 +247,13 @@
         }
 
 		function downloadImage(imageUrl) {
+		    const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
 		    fetch(imageUrl)
 		        .then(response => response.blob())
 		        .then(blob => {
 		            const link = document.createElement('a');
 		            link.href = URL.createObjectURL(blob);
-		            link.download = 'imagen-generada.png';
+		            link.download = `${prompt || 'imagen-generada'}.png`;
 		            document.body.appendChild(link);
 		            link.click();
 		            document.body.removeChild(link);
@@ -264,15 +265,14 @@
 		}
 
 		function shareImage(imageUrl) {
+		    const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
 		    fetch(imageUrl)
 		        .then(response => response.blob())
 		        .then(blob => {
-		            const file = new File([blob], 'imagen-generada.png', { type: 'image/png' });
-            
+		            const file = new File([blob], `${prompt || 'imagen-generada'}.png`, { type: 'image/png' });
 		            if (navigator.share) {
 		                navigator.share({
-		                    title: 'Imagen Generada',
-		                    files: [file]
+		                    files: [file] // Solo enviamos el archivo sin texto adicional
 		                }).catch(error => {
 		                    console.log('Error al compartir:', error);
 		                    alert('No se pudo compartir la imagen.');
