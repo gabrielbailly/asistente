@@ -181,7 +181,6 @@
         </div>
         <button onclick="generateContent()">Generar</button>
         <div id="response" class="response"></div>
-<button class="exit-button" onclick="goToHome()">Ir a Inicio</button>
     </div>
 
     <script>
@@ -289,11 +288,6 @@
                 alert('La función de compartir no está soportada en este navegador.');
             }
         }
-
-		function goToHome() {
-		    // Redirige a la página principal o recarga la página
-		    window.location.href = '/';
-		}
     </script>
 <script>
 if ('serviceWorker' in navigator) {
