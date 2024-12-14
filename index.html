@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="Es-es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="manifest" href="manifest.json">
+	<script>
+	  if ('serviceWorker' in navigator) {
+	    navigator.serviceWorker.register('service-worker.js')
+	      .then(() => console.log('Service Worker registrado'));
+	  }
+	</script>
+
+    <title>Asistente Virtual ALF</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #fff;
+        }
+        .chat-container {
+            background: #ffffff;
+            color: #333;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .chat-container h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #333;
+        }
+        #assistantMessage {
+            display: inline-block;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .chat-container input {
+            width: calc(100% - 30px);
+            max-width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+        .chat-container .checkbox-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .checkbox-group label {
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .chat-container button {
+            padding: 15px 20px;
+            background-color: #2575fc;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .chat-container button:hover {
+            background-color: #1b5bb8;
+        }
+        .response {
+            margin-top: 20px;
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 1.2em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow: auto;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .response pre {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+        .response img {
+            max-width: 100%;
+            border-radius: 6px;
+        }
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .actions button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .actions button:hover {
+            background-color: #218838;
+        }
+        .continue-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .continue-button:hover {
+            background-color: #e0a800;
+        }
+        .typing {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3s steps(30, end), blink 0.5s step-end infinite alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            from { border-right: 2px solid #555; }
+            to { border-right: 2px solid transparent; }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Asistente Virtual ALF</h1>
+        <p id="assistantMessage" class="typing">Hola, soy tu asistente virtual, ¿qué quieres que haga por ti?</p>
+        <input type="text" id="userPrompt" placeholder="Escribe tu prompt..." onkeypress="handleEnter(event)">
+        <div class="checkbox-group">
+            <label><input type="radio" name="contentType" value="image" checked> Generar Imagen</label>
+            <label><input type="radio" name="contentType" value="text"> Generar Texto</label>
+        </div>
+        <button onclick="generateContent()">Generar</button>
+        <div id="response" class="response"></div>
+    </div>
+
+    <script>
+        let conversationContext = '';
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                generateContent();
+            }
+        }
+
+        function generateContent() {
+            const prompt = document.getElementById('userPrompt').value;
+            const contentType = document.querySelector('input[name="contentType"]:checked').value;
+            const responseDiv = document.getElementById('response');
+
+            if (!prompt.trim()) {
+                responseDiv.innerHTML = "<p style='color: red;'>Por favor, introduce un prompt.</p>";
+                return;
+            }
+
+            // Add current prompt to conversation context
+            conversationContext += (conversationContext ? ' ' : '') + prompt;
+
+            responseDiv.innerHTML = "<p>Generando contenido...</p>";
+
+            if (contentType === "image") {
+                const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(conversationContext)}?nologo=true`;
+                responseDiv.innerHTML = `<p><strong>Imagen Generada:</strong></p><img src="${imageUrl}" alt="Imagen generada">
+                <div class='actions'>
+                    <button onclick="downloadImage('${imageUrl}')">Descargar</button>
+                    <button onclick="shareImage('${imageUrl}')">Compartir</button>
+                </div>
+                <button class='continue-button' onclick="resetForNextPrompt('¿Necesitas algo más?')">Seguir Conversando</button>`;
+            } else if (contentType === "text") {
+                const textUrl = `https://text.pollinations.ai/${encodeURIComponent(conversationContext)}?model=gpt4o&nologo=true`;
+                fetch(textUrl)
+                    .then(response => response.text())
+                    .then(data => {
+                        const textData = data;
+                        responseDiv.innerHTML = `<p><strong>Texto Generado:</strong></p><pre>${textData}</pre>
+                        <div class='actions'>
+                            <button onclick="downloadText('${encodeURIComponent(textData)}')">Descargar</button>
+                            <button onclick="shareText('${encodeURIComponent(textData)}')">Compartir</button>
+                        </div>
+                        <button class='continue-button' onclick="resetForNextPrompt('¿Necesitas algo más?')">Seguir Conversando</button>`;
+                    })
+                    .catch(error => {
+                        responseDiv.innerHTML = `<p style='color: red;'>Error al generar texto: ${error.message}</p>`;
+                    });
+            }
+        }
+
+        function resetForNextPrompt(newMessage) {
+            document.getElementById('userPrompt').value = '';
+            document.getElementById('response').innerHTML = '';
+            const assistantMessage = document.getElementById('assistantMessage');
+            assistantMessage.textContent = '';
+            assistantMessage.classList.remove('typing');
+            void assistantMessage.offsetWidth; // Trigger reflow to restart animation
+            assistantMessage.textContent = newMessage;
+            assistantMessage.classList.add('typing');
+            document.getElementById('userPrompt').focus();
+        }
+
+        function downloadImage(imageUrl) {
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = 'imagen-generada.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function shareImage(imageUrl) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Imagen Generada',
+                    url: imageUrl
+                }).catch(error => console.log('Error al compartir:', error));
+            } else {
+                alert('La función de compartir no está soportada en este navegador.');
+            }
+        }
+
+        function downloadText(encodedTextContent) {
+            const textContent = decodeURIComponent(encodedTextContent);
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'texto-generado.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function shareText(encodedTextContent) {
+            const textContent = decodeURIComponent(encodedTextContent);
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Texto Generado',
+                    text: textContent
+                }).catch(error => console.log('Error al compartir:', error));
+            } else {
+                alert('La función de compartir no está soportada en este navegador.');
+            }
+        }
+    </script>
+</body>
+</html>
