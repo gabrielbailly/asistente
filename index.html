@@ -1,17 +1,9 @@
 <!DOCTYPE html>
-<html lang="Es-es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="manifest" href="manifest.json">
-	<script>
-	  if ('serviceWorker' in navigator) {
-	    navigator.serviceWorker.register('service-worker.js')
-	      .then(() => console.log('Service Worker registrado'));
-	  }
-	</script>
-
-    <title>Asistente Virtual</title>
+    <title>Asistente Virtual ALF</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -34,6 +26,7 @@
             max-width: 500px;
             text-align: center;
             box-sizing: border-box;
+            overflow: hidden;
         }
         .chat-container h1 {
             margin-bottom: 20px;
@@ -41,15 +34,15 @@
             color: #333;
         }
         #assistantMessage {
-			display: inline-block;
-			max-width: 100%;
-			overflow-wrap: break-word;
-			font-size: 1.2em;
-			margin-bottom: 15px;
-			color: #555;
-			white-space: pre-wrap;
-			text-align: left;
-			word-wrap: break-word;
+            display: inline-block;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #555;
+            white-space: pre-wrap;
+            text-align: left;
+            word-wrap: break-word;
         }
         .chat-container input {
             width: calc(100% - 30px);
@@ -68,16 +61,16 @@
             gap: 20px;
         }
         .checkbox-group label {
-            font-size: 0.9em;
+            font-size: 1.1em;
             cursor: pointer;
         }
         .chat-container button {
-            padding: 10px 15px;
+            padding: 15px 20px;
             background-color: #2575fc;
             color: #fff;
             border: none;
             border-radius: 6px;
-            font-size: 0.9em;
+            font-size: 1.1em;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
@@ -91,7 +84,7 @@
             border: 1px solid #ddd;
             border-radius: 6px;
             text-align: left;
-            font-size: 1em;
+            font-size: 1.2em;
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow-wrap: break-word;
@@ -140,6 +133,20 @@
         .continue-button:hover {
             background-color: #e0a800;
         }
+        .exit-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .exit-button:hover {
+            background-color: #c82333;
+        }
         .typing {
             display: inline-block;
             white-space: nowrap;
@@ -160,7 +167,7 @@
 </head>
 <body>
     <div class="chat-container">
-        <h1>Asistente Virtual</h1>
+        <h1>Asistente Virtual ALF</h1>
         <p id="assistantMessage" class="typing">Hola, soy tu asistente virtual, ¿qué quieres que haga por ti?</p>
         <input type="text" id="userPrompt" placeholder="Escribe tu prompt..." onkeypress="handleEnter(event)">
         <div class="checkbox-group">
@@ -169,6 +176,7 @@
         </div>
         <button onclick="generateContent()">Generar</button>
         <div id="response" class="response"></div>
+        <button class="exit-button" onclick="exitApp()">Salir de la App</button>
     </div>
 
     <script>
@@ -274,6 +282,14 @@
                 }).catch(error => console.log('Error al compartir:', error));
             } else {
                 alert('La función de compartir no está soportada en este navegador.');
+            }
+        }
+
+        function exitApp() {
+            if (window.navigator && window.navigator.app) {
+                window.navigator.app.exitApp();
+            } else {
+                alert('No es posible cerrar la app automáticamente en este navegador. Por favor, ciérrala manualmente.');
             }
         }
     </script>
