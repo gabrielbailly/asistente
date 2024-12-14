@@ -181,7 +181,7 @@
         </div>
         <button onclick="generateContent()">Generar</button>
         <div id="response" class="response"></div>
-        <button class="exit-button" onclick="exitApp()">Salir de la App</button>
+<button class="exit-button" onclick="goToHome()">Ir a Inicio</button>
     </div>
 
     <script>
@@ -290,13 +290,10 @@
             }
         }
 
-        function exitApp() {
-            if (window.navigator && window.navigator.app) {
-                window.navigator.app.exitApp();
-            } else {
-                alert('No es posible cerrar la app automáticamente en este navegador. Por favor, ciérrala manualmente.');
-            }
-        }
+		function goToHome() {
+		    // Redirige a la página principal o recarga la página
+		    window.location.href = '/';
+		}
     </script>
 <script>
 if ('serviceWorker' in navigator) {
