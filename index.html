@@ -38,6 +38,16 @@
             font-size: 2em;
             color: #333;
         }
+        .prompt-history {
+            margin-bottom: 20px;
+            background-color: #f0f0f0;
+            color: #555;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: left;
+            word-wrap: break-word;
+        }
         #assistantMessage {
             display: inline-block;
             max-width: 100%;
@@ -95,25 +105,21 @@
 		    resize: none; /* Impide cambiar el tamaño manualmente */
 		}
 		
-		.response {
-		    margin-top: 20px;
-		    background: #f9f9f9;
-		    padding: 20px;
-		    border: 1px solid #ddd;
-		    border-radius: 6px;
-		    display: flex; /* Activa Flexbox */
-		    flex-direction: column; /* Asegura que los elementos hijos se apilen verticalmente */
-		    justify-content: center; /* Alinea los elementos hijos verticalmente */
-		    align-items: center; /* Alinea los elementos hijos horizontalmente */
-		    font-size: 1em;
-		    white-space: pre-wrap;
-		    word-wrap: break-word;
-		    overflow-wrap: break-word;
-		    overflow: auto;
-		    max-width: 100%;
-		    box-sizing: border-box;
-		}
-      
+        .response {
+            margin-top: 20px;
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            overflow: auto;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
         .response pre {
             white-space: pre-wrap;
             overflow-wrap: break-word;
@@ -141,18 +147,17 @@
         .actions button:hover {
             background-color: #218838;
         }
-		.continue-button {
-		    margin: 10px auto; /* Centra el botón horizontalmente */
-		    padding: 5px 15px;
-		    background-color: #ffc107;
-		    color: #333;
-		    border: none;
-		    border-radius: 6px;
-		    font-size: 1em;
-		    cursor: pointer;
-		    transition: background-color 0.3s ease;
-		}
-      
+        .continue-button {
+            margin-top: 20px;
+            padding: 5px 15px;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
         .continue-button:hover {
             background-color: #e0a800;
         }
@@ -177,7 +182,8 @@
 <body>
     <div class="chat-container">
         <h1>Asistente Virtual</h1>
-        <p id="assistantMessage" class="typing">Hola, soy tu asistente virtual,<br> ¿qué quieres que haga por ti?</p>
+        <div class="prompt-history" id="promptHistory"></div>
+        <p id="assistantMessage" class="typing">Hola, soy tu asistente virtual, ¿qué quieres que haga por ti?</p>
 <textarea id="userPrompt" placeholder="Escribe tu prompt..." onkeypress="handleEnter(event)" rows="4" style="resize: none;"></textarea>
         <div class="checkbox-group">
             <label><input type="radio" name="contentType" value="image" checked> Generar Imagen</label>
@@ -207,6 +213,9 @@
 
             // Add current prompt to conversation context
             conversationContext += (conversationContext ? ' ' : '') + prompt;
+
+            // Update prompt history
+            document.getElementById('promptHistory').innerText = `Último prompt: ${prompt}`;
 
             responseDiv.innerHTML = "<p>Generando contenido...</p>";
 
@@ -290,18 +299,26 @@
 		        });
 		}
 
-		function downloadText(encodedTextContent) {
-		    const textContent = decodeURIComponent(encodedTextContent);
-		    const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
-		    const blob = new Blob([textContent], { type: 'text/plain' });
-		    const link = document.createElement('a');
-		    link.href = URL.createObjectURL(blob);
-		    link.download = `${prompt || 'texto-generado'}.txt`;
-		    document.body.appendChild(link);
-		    link.click();
-		    document.body.removeChild(link);
-		}
-		
+	    function downloadText(encodedTextContent) {
+	       const textContent = decodeURIComponent(encodedTextContent);
+	       const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
+	       const blob = new Blob([textContent], { type: 'text/plain' });
+	       const link = document.createElement('a');
+	       link.href = URL.createObjectURL(blob);
+	       link.download = `${prompt || 'texto-generado'}.txt`;
+	       document.body.appendChild(link);
+	       link.click();
+	       document.body.removeChild(link);
+	   });
+	               const link = document.createElement('a');
+	               link.href = URL.createObjectURL(blob);
+	               link.download = 'texto-generado.txt';
+	               document.body.appendChild(link);
+	               link.click();
+	               document.body.removeChild(link);
+	           }
+        
+
         function shareText(encodedTextContent) {
             const textContent = decodeURIComponent(encodedTextContent);
             if (navigator.share) {
@@ -317,7 +334,7 @@
 <script>
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
+        navigator.serviceWorker.register('/service-worker.js')
             .then(registration => {
                 console.log('Service Worker registrado con éxito:', registration.scope);
             })
