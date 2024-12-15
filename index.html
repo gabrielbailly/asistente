@@ -249,19 +249,22 @@
 		function resetForNextPrompt(newMessage) {
 		    const lastPrompt = document.getElementById('userPrompt').value;
 		    if (lastPrompt.trim()) {
+		        // Obtener el historial actual y agregar el nuevo prompt
 		        const promptHistory = document.getElementById('promptHistory');
-		        promptHistory.innerText += `${promptHistory.innerText ? '\n' : ''}Nuevo prompt: ${lastPrompt}`;
+		        promptHistory.innerText += `${promptHistory.innerText ? '\n' : ''}${lastPrompt}`;
 		    }
+		    // Limpiar el campo de entrada y actualizar el mensaje del asistente
 		    document.getElementById('userPrompt').value = '';
 		    document.getElementById('response').innerHTML = '';
 		    const assistantMessage = document.getElementById('assistantMessage');
 		    assistantMessage.textContent = '';
 		    assistantMessage.classList.remove('typing');
-		    void assistantMessage.offsetWidth; // Trigger reflow to restart animation
+		    void assistantMessage.offsetWidth; // Trigger reflow para reiniciar la animación
 		    assistantMessage.textContent = newMessage;
 		    assistantMessage.classList.add('typing');
 		    document.getElementById('userPrompt').focus();
 		}
+	
        
 
 		function downloadImage(imageUrl) {
