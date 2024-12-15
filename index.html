@@ -215,7 +215,7 @@
             conversationContext += (conversationContext ? ' ' : '') + prompt;
 
             // Update prompt history
-            
+            document.getElementById('promptHistory').innerText = `Último prompt: ${prompt}`;
 
             responseDiv.innerHTML = "<p>Generando contenido...</p>";
 
@@ -247,11 +247,14 @@
         }
 
         function resetForNextPrompt(newMessage) {
+<<<<<<< HEAD
     const lastPrompt = document.getElementById('userPrompt').value;
     if (lastPrompt.trim()) {
         const promptHistory = document.getElementById('promptHistory');
 		promptHistory.innerText += `${promptHistory.innerText ? '\n' : ''}Nuevo prompt: ${lastPrompt}`;
     }
+=======
+>>>>>>> parent of ed96fbc (Update index.html)
             document.getElementById('userPrompt').value = '';
             document.getElementById('response').innerHTML = '';
             const assistantMessage = document.getElementById('assistantMessage');
@@ -304,24 +307,18 @@
 		        });
 		}
 
-	    function downloadText(encodedTextContent) {
-	       const textContent = decodeURIComponent(encodedTextContent);
-	       const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
-	       const blob = new Blob([textContent], { type: 'text/plain' });
-	       const link = document.createElement('a');
-	       link.href = URL.createObjectURL(blob);
-	       link.download = `${prompt || 'texto-generado'}.txt`;
-	       document.body.appendChild(link);
-	       link.click();
-	       document.body.removeChild(link);
-	   });
-	               const link = document.createElement('a');
-	               link.href = URL.createObjectURL(blob);
-	               link.download = 'texto-generado.txt';
-	               document.body.appendChild(link);
-	               link.click();
-	               document.body.removeChild(link);
-	           }
+		function downloadText(encodedTextContent) {
+		    const textContent = decodeURIComponent(encodedTextContent);
+		    const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_');
+		    const blob = new Blob([textContent], { type: 'text/plain' });
+		    const link = document.createElement('a');
+		    link.href = URL.createObjectURL(blob);
+		    link.download = `${prompt || 'texto-generado'}.txt`;
+		    document.body.appendChild(link);
+		    link.click();
+		    document.body.removeChild(link);
+		}
+	  
         
 
         function shareText(encodedTextContent) {
@@ -339,7 +336,7 @@
 <script>
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('./service-worker.js')
             .then(registration => {
                 console.log('Service Worker registrado con éxito:', registration.scope);
             })
