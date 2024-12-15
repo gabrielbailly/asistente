@@ -249,7 +249,9 @@
         function resetForNextPrompt(newMessage) {
     const lastPrompt = document.getElementById('userPrompt').value;
     if (lastPrompt.trim()) {
-        document.getElementById('promptHistory').innerText = `Último prompt: ${lastPrompt}`;
+        const promptHistory = document.getElementById('promptHistory');
+promptHistory.innerText += `${promptHistory.innerText ? '
+' : ''}Nuevo prompt: ${lastPrompt}`;
     }
             document.getElementById('userPrompt').value = '';
             document.getElementById('response').innerHTML = '';
