@@ -246,25 +246,23 @@
             }
         }
 
-        function resetForNextPrompt(newMessage) {
-<<<<<<< HEAD
-    const lastPrompt = document.getElementById('userPrompt').value;
-    if (lastPrompt.trim()) {
-        const promptHistory = document.getElementById('promptHistory');
-		promptHistory.innerText += `${promptHistory.innerText ? '\n' : ''}Nuevo prompt: ${lastPrompt}`;
-    }
-=======
->>>>>>> parent of ed96fbc (Update index.html)
-            document.getElementById('userPrompt').value = '';
-            document.getElementById('response').innerHTML = '';
-            const assistantMessage = document.getElementById('assistantMessage');
-            assistantMessage.textContent = '';
-            assistantMessage.classList.remove('typing');
-            void assistantMessage.offsetWidth; // Trigger reflow to restart animation
-            assistantMessage.textContent = newMessage;
-            assistantMessage.classList.add('typing');
-            document.getElementById('userPrompt').focus();
-        }
+		function resetForNextPrompt(newMessage) {
+		    const lastPrompt = document.getElementById('userPrompt').value;
+		    if (lastPrompt.trim()) {
+		        const promptHistory = document.getElementById('promptHistory');
+		        promptHistory.innerText += `${promptHistory.innerText ? '\n' : ''}Nuevo prompt: ${lastPrompt}`;
+		    }
+		    document.getElementById('userPrompt').value = '';
+		    document.getElementById('response').innerHTML = '';
+		    const assistantMessage = document.getElementById('assistantMessage');
+		    assistantMessage.textContent = '';
+		    assistantMessage.classList.remove('typing');
+		    void assistantMessage.offsetWidth; // Trigger reflow to restart animation
+		    assistantMessage.textContent = newMessage;
+		    assistantMessage.classList.add('typing');
+		    document.getElementById('userPrompt').focus();
+		}
+       
 
 		function downloadImage(imageUrl) {
 		    const prompt = conversationContext.replace(/[^a-zA-Z0-9\-_]/g, '_'); // Sanitizar el prompt para usarlo como nombre de archivo
