@@ -95,21 +95,25 @@
 		    resize: none; /* Impide cambiar el tamaño manualmente */
 		}
 		
-        .response {
-            margin-top: 20px;
-            background: #f9f9f9;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 1em;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            overflow: auto;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
+		.response {
+		    margin-top: 20px;
+		    background: #f9f9f9;
+		    padding: 20px;
+		    border: 1px solid #ddd;
+		    border-radius: 6px;
+		    display: flex; /* Activa Flexbox */
+		    flex-direction: column; /* Asegura que los elementos hijos se apilen verticalmente */
+		    justify-content: center; /* Alinea los elementos hijos verticalmente */
+		    align-items: center; /* Alinea los elementos hijos horizontalmente */
+		    font-size: 1em;
+		    white-space: pre-wrap;
+		    word-wrap: break-word;
+		    overflow-wrap: break-word;
+		    overflow: auto;
+		    max-width: 100%;
+		    box-sizing: border-box;
+		}
+      
         .response pre {
             white-space: pre-wrap;
             overflow-wrap: break-word;
@@ -137,17 +141,18 @@
         .actions button:hover {
             background-color: #218838;
         }
-        .continue-button {
-            margin-top: 20px;
-            padding: 5px 15px;
-            background-color: #ffc107;
-            color: #333;
-            border: none;
-            border-radius: 6px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+		.continue-button {
+		    margin: 10px auto; /* Centra el botón horizontalmente */
+		    padding: 5px 15px;
+		    background-color: #ffc107;
+		    color: #333;
+		    border: none;
+		    border-radius: 6px;
+		    font-size: 1em;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		}
+      
         .continue-button:hover {
             background-color: #e0a800;
         }
