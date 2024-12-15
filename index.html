@@ -250,8 +250,7 @@
     const lastPrompt = document.getElementById('userPrompt').value;
     if (lastPrompt.trim()) {
         const promptHistory = document.getElementById('promptHistory');
-promptHistory.innerText += `${promptHistory.innerText ? '
-' : ''}Nuevo prompt: ${lastPrompt}`;
+		promptHistory.innerText += `${promptHistory.innerText ? '\n' : ''}Nuevo prompt: ${lastPrompt}`;
     }
             document.getElementById('userPrompt').value = '';
             document.getElementById('response').innerHTML = '';
